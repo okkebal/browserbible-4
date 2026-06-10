@@ -8,6 +8,9 @@ import { mixinEventEmitter } from '../common/EventEmitter.js';
 import { getWindowTypeByClassName, getApp } from './registry.js';
 import { getWindowIcon } from './windowIcons.js';
 
+const linkedSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+const unlinkedSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.84 12.25l1.72-1.71a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M5.17 11.75l-1.71 1.71a5 5 0 0 0 7.07 7.07l1.71-1.71"/><line x1="8" y1="2" x2="8" y2="5"/><line x1="2" y1="8" x2="5" y2="8"/><line x1="16" y1="19" x2="16" y2="22"/><line x1="19" y1="16" x2="22" y2="16"/></svg>';
+
 /**
  * Individual window instance within the manager
  * @class
@@ -29,7 +32,27 @@ export class Window {
 
     this.node = elem('div', { className: `window ${className} active` });
     const closeBtn = elem('span', { className: 'close-button' });
-    this.closeContainer = elem('div', { className: 'close-container' }, closeBtn);
+    const linkBtn = elem('span', { className: 'link-button' });
+    this.closeContainer = elem('div', { className: 'close-container' }, linkBtn, closeBtn);
+
+    // Linked windows follow (and broadcast) navigation; unlinked windows
+    // scroll and navigate independently of the rest.
+    this.linked = data?.linked !== false;
+
+    const updateLinkButton = () => {
+      linkBtn.innerHTML = this.linked ? linkedSvg : unlinkedSvg;
+      linkBtn.classList.toggle('unlinked', !this.linked);
+      linkBtn.title = this.linked
+        ? 'Linked: follows navigation in other windows. Click to unlink.'
+        : 'Unlinked: navigates independently. Click to relink.';
+    };
+    updateLinkButton();
+
+    linkBtn.addEventListener('click', () => {
+      this.linked = !this.linked;
+      updateLinkButton();
+      manager.trigger('settingschange', { type: 'settingschange', target: this, data: null });
+    });
     const tabLabel = elem('span', { className: `window-tab-label ${className}-tab` });
     const iconSvg = getWindowIcon(className);
     if (iconSvg) {
@@ -158,7 +181,9 @@ export class Window {
    * @returns {Object} Window data for persistence
    */
   getData() {
-    return this.controller?.getData() ?? {};
+    const data = this.controller?.getData() ?? {};
+    if (!this.linked) data.linked = false;
+    return data;
   }
 
   /**
@@ -278,9 +303,10 @@ export class WindowManager {
     if (this.windows.length > 0) {
       if (width < sizeThreshold) {
         const tabWidth = this.windows[0].tab.offsetWidth - 10;
+        const tabBarHeight = 26; // tabs sit in their own row below the top bar
 
         this.windows.forEach((win, i) => {
-          win.size(width, height);
+          win.size(width, height - tabBarHeight);
           win.tab.style.right = `${(this.windows.length - i - 1) * tabWidth}px`;
         });
       } else {

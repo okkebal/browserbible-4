@@ -96,6 +96,24 @@ export function getTextid(input) {
   return (parts.length > 1) ? parts[1] : parts[0];
 }
 
+/**
+ * Version abbreviation for display: strips the leading ISO 639-3 language
+ * prefix from ids like "ENGKJV" so the UI shows "KJV".
+ * @param {Object} textInfo - Text info with abbr/id and lang fields
+ * @returns {string} Display abbreviation
+ */
+export function displayAbbr(textInfo) {
+  if (!textInfo) return '';
+  const abbr = textInfo.abbr || textInfo.id || '';
+  const lang = (textInfo.lang || '').toUpperCase();
+
+  if (lang.length === 3 && abbr.toUpperCase().startsWith(lang) && abbr.length - lang.length >= 2) {
+    return abbr.slice(lang.length);
+  }
+
+  return abbr;
+}
+
 export function getProviderName(input) {
   const parts = input.split(':');
   const textid = parts.length > 1 ? parts[1] : parts[0];

@@ -197,14 +197,18 @@ export class App {
   }
 
   /**
-   * Broadcast a message to all windows and plugins
+   * Broadcast a message to all windows and plugins.
+   * Unlinked windows neither broadcast nor receive — they function independently.
    * @param {Object} e - Event object with id and data
    */
   handleGlobalMessage(e) {
     const windows = this.windowManager.getWindows();
 
+    const sender = windows.find(win => win.id === e.id);
+    if (sender && !sender.linked) return;
+
     for (const win of windows) {
-      if (win.id !== e.id) {
+      if (win.id !== e.id && win.linked) {
         win.trigger('message', e);
       }
     }

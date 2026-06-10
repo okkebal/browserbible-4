@@ -7,7 +7,7 @@
 import { elem, offset } from '../lib/helpers.esm.js';
 import { mixinEventEmitter } from '../common/EventEmitter.js';
 import AppSettings from '../common/AppSettings.js';
-import { loadTexts, getText } from '../texts/TextLoader.js';
+import { loadTexts, getText, displayAbbr } from '../texts/TextLoader.js';
 import { t as i18nT } from '../lib/i18n.js';
 import { getConfig } from '../core/config.js';
 import audioEarSvg from '../../css/images/audio-ear.svg?raw';
@@ -188,10 +188,16 @@ export function TextChooser() {
     if (item.type === 'section-header') {
       row.className = 'text-chooser-row-header text-chooser-section-header';
       row.appendChild(elem('span', { className: 'name' }, item.data));
+      if (item.langCode) {
+        row.appendChild(elem('span', { className: 'text-chooser-lang-code' }, item.langCode));
+      }
     } else if (item.type === 'header') {
       row.className = 'text-chooser-row-header';
       row.dataset.langName = item.data;
       row.appendChild(elem('span', { className: 'name' }, item.data));
+      if (item.langCode) {
+        row.appendChild(elem('span', { className: 'text-chooser-lang-code' }, item.langCode));
+      }
     } else {
       const text = item.data;
       const isSelected = selectedTextInfo && selectedTextInfo.id === text.id;
@@ -199,7 +205,7 @@ export function TextChooser() {
       row.className = 'text-chooser-row' + (isSelected ? ' selected' : '');
       row.dataset.id = text.id;
 
-      row.appendChild(elem('span', { className: 'text-chooser-abbr' }, text.abbr));
+      row.appendChild(elem('span', { className: 'text-chooser-abbr' }, displayAbbr(text)));
       row.appendChild(elem('span', { className: 'text-chooser-name' }, text.name));
 
       if (text.hasLemma) {
@@ -291,7 +297,7 @@ export function TextChooser() {
 
       const displayName = textsInLang[0].langNameEnglish || textsInLang[0].langName;
 
-      result.push({ type: 'header', data: displayName });
+      result.push({ type: 'header', data: displayName, langCode: textsInLang[0].lang || '' });
 
       for (const text of textsInLang) {
         result.push({
@@ -344,7 +350,12 @@ export function TextChooser() {
       t => (t.langNameEnglish || t.langName || '') === currentLang
     );
     if (currentLangTexts.length > 0) {
-      result.push({ type: 'section-header', data: currentLang, sectionType: 'current-language' });
+      result.push({
+        type: 'section-header',
+        data: currentLang,
+        sectionType: 'current-language',
+        langCode: currentLangTexts[0].lang || ''
+      });
       currentLangTexts.sort((a, b) => a.name.localeCompare(b.name));
       for (const text of currentLangTexts) {
         result.push({

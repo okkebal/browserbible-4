@@ -6,12 +6,15 @@ import { BaseWindow, AsyncHelpers, registerWindowComponent } from './BaseWindow.
 import { offset } from '../lib/helpers.esm.js';
 import gearSvg from '../../css/images/gear.svg?raw';
 
+// Curved "enter/return" arrow for the go button inside the search input
+const enterArrowSvg = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 3.5v4a2.5 2.5 0 0 1-2.5 2.5H4"/><path d="M6.5 7.5 4 10l2.5 2.5"/></svg>';
+
 import { getApp } from '../core/registry.js';
 import { i18n } from '../lib/i18n.js';
 import { BOOK_DATA, OT_BOOKS, NT_BOOKS, AP_BOOKS, APOCRYPHAL_BIBLE, EXTRA_MATTER } from '../bible/BibleData.js';
 import { Reference } from '../bible/BibleReference.js';
 import { getGlobalTextChooser } from '../ui/TextChooser.js';
-import { getText, loadTexts, startSearch } from '../texts/TextLoader.js';
+import { getText, loadTexts, startSearch, displayAbbr } from '../texts/TextLoader.js';
 
 const getTextAsync = (textId) => AsyncHelpers.promisify(getText, textId);
 const loadTextsAsync = () => AsyncHelpers.promisify(loadTexts);
@@ -42,10 +45,12 @@ export class SearchWindowComponent extends BaseWindow {
   async render() {
     this.innerHTML = `
       <div class="window-header search-header">
-        <input type="text" class="search-text app-input i18n" data-i18n="[placeholder]windows.search.placeholder" />
+        <span class="search-input-wrap">
+          <input type="text" class="search-text app-input i18n" data-i18n="[placeholder]windows.search.placeholder" />
+          <button type="button" class="search-button search-go-button i18n" data-i18n="[title]windows.search.button"></button>
+        </span>
         <div class="text-list app-list" style="">&nbsp;</div>
         <div class="search-options-button header-icon" style=""></div>
-        <input type="button" value="Search" data-i18n="[value]windows.search.button" class="search-button header-button i18n" />
       </div>
       <div class="search-main">
         <div class="search-wrapper">
@@ -54,6 +59,7 @@ export class SearchWindowComponent extends BaseWindow {
               <div class="search-progress-bar-inner"></div>
               <span class="search-progress-bar-label"></span>
             </div>
+            <h2 class="search-results-count"></h2>
             <div class="search-visual"><span class="search-visual-label"></span></div>
             <div class="search-lemma-info"></div>
             <div class="search-usage"></div>
@@ -65,6 +71,7 @@ export class SearchWindowComponent extends BaseWindow {
     `;
 
     this.querySelector('.search-options-button').innerHTML = gearSvg;
+    this.querySelector('.search-go-button').innerHTML = enterArrowSvg;
 
     // Create division chooser popover (appended to body)
     this.divisionChooser = this.createElement(`
@@ -89,6 +96,7 @@ export class SearchWindowComponent extends BaseWindow {
     this.refs.searchOptionsButton = this.$('.search-options-button');
 
     this.refs.topBlock = this.$('.search-top');
+    this.refs.resultsCount = this.$('.search-results-count');
     this.refs.topLemmaInfo = this.$('.search-lemma-info');
     this.refs.topVisual = this.$('.search-visual');
     this.refs.topVisualLabel = this.$('.search-visual-label');
@@ -640,19 +648,14 @@ export class SearchWindowComponent extends BaseWindow {
   }
 
   setFinalResultsCount(count) {
-    this.refs.footer.innerHTML = `${i18n.t('windows.search.results')}: ${count}`;
-    this.refs.searchProgressBarLabel.innerHTML = `${count} ${i18n.t('windows.search.verses')}`;
-
-    const labelWidth = this.refs.searchProgressBarLabel.offsetWidth;
-
-    this.refs.searchProgressBarLabel.style.left = '50%';
-    this.refs.searchProgressBarLabel.style.marginLeft = `-${labelWidth / 2}px`;
+    this.refs.resultsCount.innerHTML = `${i18n.t('windows.search.results')}: ${count}`;
+    this.refs.footer.innerHTML = '';
+    this.refs.searchProgressBar.style.display = 'none';
   }
 
   clearResults() {
     this.refs.footer.innerHTML = '';
-    const topBlockTitle = this.refs.topBlock.querySelector('h2');
-    if (topBlockTitle) topBlockTitle.innerHTML = '';
+    this.refs.resultsCount.innerHTML = '';
     this.refs.resultsBlock.innerHTML = '';
     this.refs.topVisual.innerHTML = '';
     this.refs.topVisual.appendChild(this.refs.topVisualLabel);
@@ -803,7 +806,7 @@ export class SearchWindowComponent extends BaseWindow {
 
   setTextInfo(newTextInfo, sendToChooser) {
     this.state.selectedTextInfo = newTextInfo;
-    this.refs.textlistui.innerHTML = newTextInfo.abbr;
+    this.refs.textlistui.innerHTML = displayAbbr(newTextInfo);
     this.drawDivisions();
 
     if (sendToChooser) {

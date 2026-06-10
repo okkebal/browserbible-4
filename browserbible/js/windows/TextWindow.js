@@ -8,7 +8,7 @@ import { Scroller } from './Scroller.js';
 import { AudioController } from './AudioController.js';
 import { getGlobalTextChooser } from '../ui/TextChooser.js';
 import { getGlobalTextNavigator } from '../ui/TextNavigator.js';
-import { getText, loadTexts } from '../texts/TextLoader.js';
+import { getText, loadTexts, displayAbbr } from '../texts/TextLoader.js';
 import { TextNavigation } from '../common/TextNavigation.js';
 import infoSvg from '../../css/images/info.svg?raw';
 import audioEarSvg from '../../css/images/audio-ear.svg?raw';
@@ -214,13 +214,6 @@ export class TextWindowComponent extends BaseWindow {
       }
     }
 
-    // Position the info panel to fill this window (popover is in top layer)
-    const rect = this.refs.container.getBoundingClientRect();
-    this.refs.info.style.top = `${rect.top}px`;
-    this.refs.info.style.left = `${rect.left}px`;
-    this.refs.info.style.width = `${rect.width}px`;
-    this.refs.info.style.height = `${rect.height}px`;
-
     this.refs.info.showPopover();
   }
 
@@ -291,7 +284,7 @@ export class TextWindowComponent extends BaseWindow {
     const newTextInfo = e.data.textInfo;
 
     this.setTextInfoUI(newTextInfo);
-    this.updateTabLabel(newTextInfo.abbr);
+    this.updateTabLabel(displayAbbr(newTextInfo));
 
     this.textNavigator.setTextInfo(newTextInfo);
     this.audioController.setTextInfo(newTextInfo);
@@ -363,7 +356,7 @@ export class TextWindowComponent extends BaseWindow {
   async startup() {
     this.textChooser.setTextInfo(this.state.currentTextInfo);
     this.setTextInfoUI(this.state.currentTextInfo);
-    this.updateTabLabel(this.state.currentTextInfo.abbr);
+    this.updateTabLabel(displayAbbr(this.state.currentTextInfo));
 
     this.textNavigator.setTextInfo(this.state.currentTextInfo);
     this.audioController.setTextInfo(this.state.currentTextInfo);
@@ -385,7 +378,7 @@ export class TextWindowComponent extends BaseWindow {
       this.refs.textlistui.innerHTML = `<img src="${this.config.textsPath}/${textinfo.id}/${textinfo.id}.png" />`;
     } else {
       this.refs.textlistui.classList.remove('app-list-image');
-      this.refs.textlistui.innerHTML = textinfo.abbr;
+      this.refs.textlistui.innerHTML = displayAbbr(textinfo);
     }
   }
 
@@ -415,12 +408,6 @@ export class TextWindowComponent extends BaseWindow {
     this.refs.main.style.width = `${width}px`;
     this.refs.main.style.height = `${contentHeight}px`;
 
-    const containerLeft = this.refs.container.getBoundingClientRect().left;
-    this.refs.info.style.top = `${headerHeight + 10}px`;
-    this.refs.info.style.left = `${containerLeft}px`;
-    this.refs.info.style.width = `${width}px`;
-    this.refs.info.style.height = `${contentHeight - 10}px`;
-
     this.textChooser.size(width, height);
     this.textNavigator.size(width, height);
   }
@@ -446,7 +433,7 @@ export class TextWindowComponent extends BaseWindow {
       sectionid: currentLocationInfo.sectionid,
       fragmentid: currentLocationInfo.fragmentid,
       label: currentLocationInfo.label,
-      labelTab: currentTextInfo.abbr,
+      labelTab: displayAbbr(currentTextInfo),
       labelLong: currentLocationInfo.labelLong,
       hasFocus: this.state.hasFocus,
       params: {

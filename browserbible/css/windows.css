@@ -30,7 +30,7 @@ body {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 40px;
+	width: 72px;
 	height: 40px;
 	background: var(--color-background-alt);
 	z-index: var(--z-chrome);
@@ -59,6 +59,38 @@ body {
 	background-color: var(--color-error);
 	background-position: 0 -20px;
 	color: var(--color-background);
+}
+
+.link-button {
+	position: absolute;
+	z-index: var(--z-chrome);
+	top: 15px;
+	right: 40px;
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	cursor: pointer;
+	color: var(--color-text-muted);
+}
+
+.link-button svg {
+	width: 14px;
+	height: 14px;
+	display: block;
+	margin: 3px;
+}
+
+.link-button:hover {
+	color: var(--color-text);
+	background-color: var(--color-background-hover);
+}
+
+.link-button.unlinked {
+	color: var(--color-primary);
+}
+
+.one-window .window .link-button {
+	display: none;
 }
 
 .windows-header {
@@ -248,7 +280,6 @@ body {
 	margin: 2px;
 }
 
-.window .header-icon,
 .text-chooser-header .header-icon {
 	float: left;
 }
@@ -275,6 +306,7 @@ body {
 
 	.compact-ui .window-tab {
 		display: block;
+		top: 40px;
 	}
 
 
@@ -284,7 +316,7 @@ body {
 	.compact-ui .windows-main .window {
 		z-index: var(--z-base);
 		position: absolute;
-		top: 40px;
+		top: 66px;
 	}
 	.compact-ui .windows-main .window.active {
 		z-index: var(--z-above);
@@ -309,6 +341,9 @@ body {
 	.compact-ui .window .close-button {
 		top: 10px;
 	}
+	.compact-ui .window .link-button {
+		top: 10px;
+	}
 	.compact-ui .windows-header {height: 40px;}
 	.compact-ui .header-icon {margin-top: 1px;}
 
@@ -317,11 +352,11 @@ body {
 	 }
 
 	.compact-ui.app-mobile-fullscreen  .windows-main .window {
-		top: 50px;
+		top: 76px;
 	}
 
 	.compact-ui.app-mobile-fullscreen .window-tab {
-		top: 39px;
+		top: 50px;
 	}
 
 	.compact-ui.app-mobile-fullscreen #main-menu-dropdown {

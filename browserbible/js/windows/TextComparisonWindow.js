@@ -5,7 +5,7 @@
 import { BaseWindow, AsyncHelpers, registerWindowComponent } from './BaseWindow.js';
 import { Reference } from '../bible/BibleReference.js';
 import { BOOK_DATA } from '../bible/BibleData.js';
-import { loadTexts, getText, loadSection } from '../texts/TextLoader.js';
+import { loadTexts, getText, loadSection, displayAbbr } from '../texts/TextLoader.js';
 import { diffWords } from '../lib/SimpleDiff.js';
 import { TextChooser } from '../ui/TextChooser.js';
 import { TextNavigator } from '../ui/TextNavigator.js';
@@ -176,7 +176,7 @@ export class TextComparisonWindow extends BaseWindow {
     const sourceText = this.state.textInfoData.find(t => t.id === this.state.sourceTextId);
 
     if (sourceText) {
-      this.refs.sourceTitle.textContent = sourceText.abbr;
+      this.refs.sourceTitle.textContent = displayAbbr(sourceText);
       const sourceLang = sourceText.lang3 || sourceText.lang;
       if (sourceLang) {
         this.state.currentSourceLang3 = sourceLang;
@@ -213,7 +213,7 @@ export class TextComparisonWindow extends BaseWindow {
       if (abbr && this.state.textInfoData) {
         const textInfo = this.state.textInfoData.find(t => t.id === option.value);
         if (textInfo) {
-          option.textContent = `${textInfo.abbr} - ${textInfo.name}`;
+          option.textContent = `${displayAbbr(textInfo)} - ${textInfo.name}`;
         }
       }
     }
@@ -222,7 +222,7 @@ export class TextComparisonWindow extends BaseWindow {
   handleSourceChange(e) {
     const textInfo = e.data.textInfo;
     this.state.sourceTextId = textInfo.id;
-    this.refs.sourceTitle.textContent = textInfo.abbr;
+    this.refs.sourceTitle.textContent = displayAbbr(textInfo);
     this.state.currentSourceLang3 = textInfo.lang3 || textInfo.lang;
 
     this.populateTargetSelect();
@@ -291,8 +291,8 @@ export class TextComparisonWindow extends BaseWindow {
     for (const textInfo of sameLangTexts) {
       const option = document.createElement('option');
       option.value = textInfo.id;
-      option.textContent = `${textInfo.abbr} - ${textInfo.name}`;
-      option.setAttribute('data-abbr', textInfo.abbr);
+      option.textContent = `${displayAbbr(textInfo)} - ${textInfo.name}`;
+      option.setAttribute('data-abbr', displayAbbr(textInfo));
       if (textInfo.id === this.state.targetTextId) {
         option.selected = true;
       }
@@ -363,7 +363,7 @@ export class TextComparisonWindow extends BaseWindow {
 
     let html = '<table class="comparison-table section"><thead><tr><th></th>';
     for (const { textInfo } of textData) {
-      html += `<th>${textInfo.abbr}</th>`;
+      html += `<th>${displayAbbr(textInfo)}</th>`;
     }
     html += '</tr></thead><tbody>';
 

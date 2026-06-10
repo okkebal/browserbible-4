@@ -36,7 +36,22 @@
 }
 
 .compact-ui #main-search-box {
-	display: none;
+	height: 24px;
+}
+
+.compact-ui #main-search-input {
+	width: 120px;
+	height: 24px;
+}
+
+.compact-ui #main-search-button {
+	width: 26px;
+	height: 24px;
+}
+
+.compact-ui #main-search-suggestions {
+	top: 40px;
+	right: 10px;
 }
 
 #main-search-suggestions {

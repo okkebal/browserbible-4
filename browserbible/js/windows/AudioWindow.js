@@ -8,7 +8,7 @@ import { Reference } from '../bible/BibleReference.js';
 import { AudioController } from './AudioController.js';
 import { getGlobalTextChooser } from '../ui/TextChooser.js';
 import { getGlobalTextNavigator } from '../ui/TextNavigator.js';
-import { getText, getTextInfoData } from '../texts/TextLoader.js';
+import { getText, getTextInfoData, displayAbbr } from '../texts/TextLoader.js';
 
 const hasTouch = 'ontouchend' in document;
 
@@ -225,8 +225,8 @@ export class AudioWindowComponent extends BaseWindow {
   updateText(newTextInfo) {
     if (!newTextInfo) return;
 
-    this.refs.textlistui.innerHTML = newTextInfo.abbr;
-    this.updateTabLabel(newTextInfo.abbr);
+    this.refs.textlistui.innerHTML = displayAbbr(newTextInfo);
+    this.updateTabLabel(displayAbbr(newTextInfo));
     this.textNavigator?.setTextInfo(newTextInfo);
     this.audioController?.setTextInfo?.(newTextInfo);
 
@@ -331,7 +331,7 @@ export class AudioWindowComponent extends BaseWindow {
       sectionid: currentLocationInfo.sectionid,
       fragmentid: currentLocationInfo.fragmentid,
       label: currentLocationInfo.label,
-      labelTab: currentTextInfo.abbr,
+      labelTab: displayAbbr(currentTextInfo),
       labelLong: currentLocationInfo.labelLong,
       params: {
         win: 'audio',

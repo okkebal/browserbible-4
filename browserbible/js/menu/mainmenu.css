@@ -6,7 +6,7 @@
 }
 
 #app-logo img {
-	height: 28px;
+	height: 24px;
 	width: auto;
 }
 
@@ -129,7 +129,11 @@
 }
 
 	.compact-ui #app-logo {
-		display: none;
+		height: 40px;
+	}
+
+	.compact-ui #app-logo img {
+		height: 20px;
 	}
 
 	.compact-ui #main-menu-button {

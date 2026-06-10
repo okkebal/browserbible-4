@@ -140,6 +140,14 @@
 	letter-spacing: 0.05em;
 }
 
+.text-chooser-row-header .text-chooser-lang-code {
+	margin-inline-start: auto;
+	font-weight: normal;
+	font-size: 11px;
+	text-transform: uppercase;
+	opacity: .6;
+}
+
 .text-chooser-row-header td {
 	padding-left: 10px;
 }
