@@ -4,7 +4,7 @@
  */
 
 const defaultConfig = {
-  settingsPrefix: '20140307', // change to clear all user settings
+  settingsPrefix: '20260501',
 
   enableOnlineSources: true,
 
@@ -33,24 +33,6 @@ const defaultConfig = {
   defaultLanguage: '',
 
   customCssUrl: '',
-
-  fcbhKey: '',
-  fcbhTextExclusions: [],
-  fcbhLoadVersions: false,
-  fcbhApiUrl: 'https://dbt.io',
-  jfmKey: '',
-
-  arclightApiKey: '52b06248a3c6e8.12980089',
-  arclightApiUrl: 'https://api.arclight.org/v2',
-
-  // DBS API
-  dbsEnabled: true,
-  dbsKey: '',
-  dbsBase: 'https://api.dbp4.org/',
-  dbsTextExclusions: [],
-  dbsSearchEnabled: false,
-
-  // DBS Audio
   dbsAudioEnabled: true,
   dbsAudioUrl: 'https://audio.dbs.org',
 
@@ -82,8 +64,7 @@ const defaultConfig = {
     'Arial': 'Arial, Helvetica, sans-serif',
     'Lucida': '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
     'Trebuchet': '"Trebuchet MS", Helvetica, sans-serif',
-    'Verdana': 'Verdana, Geneva, sans-serif',
-    'EzraSIL': 'EzraSIL, "Times New Roman", serif'
+    'Verdana': 'Verdana, Geneva, sans-serif'
   },
   enableSettingToggles: true,
   settingToggleNames: ['Chapters', 'Verses', 'Titles', 'Notes', 'Words of Christ', 'Media', 'Justify'],
@@ -91,14 +72,9 @@ const defaultConfig = {
   enableFeedback: false,
   feedbackUrl: '',
   windowTypesOrder: [],
-
-  // Window types to hide from the UI (className strings, e.g. 'MapWindow', 'NotesWindow')
   disabledWindowTypes: (typeof __DISABLED_WINDOW_TYPES__ !== 'undefined') ? __DISABLED_WINDOW_TYPES__ : [],
-
-  // Feature flags overridden at build time (e.g. 'enableHighlighterPlugin')
   _disabledFeatures: (typeof __DISABLED_FEATURES__ !== 'undefined') ? __DISABLED_FEATURES__ : [],
 
-  // Plugins
   enableCrossReferencePopupPlugin: true,
   enableNotesPopupPlugin: true,
   enableLemmaPopupPlugin: true,
@@ -118,13 +94,6 @@ const defaultConfig = {
 };
 
 const customConfigs = {
-  dbs: {
-    customCssUrl: 'dbs.css'
-  },
-  // Serves Bible content from the local public/ tree (starter pack) instead
-  // of the remote inscript.bible.cloud. Used by e2e tests in "local" mode.
-  // Default windows are overridden because the pack ships ENGWEB but not
-  // ENGASV (the upstream default's second window).
   local: {
     baseContentUrl: '',
     windows: [
@@ -140,12 +109,10 @@ const customConfigs = {
 
 const config = { ...defaultConfig };
 
-// Apply build-time disabled features (set boolean flags to false)
 for (const key of config._disabledFeatures) {
   if (key in config) config[key] = false;
 }
 
-// Dev mode: use texts_dev path when ?dev=true is in the URL
 if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('dev') === 'true') {
   config.textsPath = 'content/texts_dev';
 }

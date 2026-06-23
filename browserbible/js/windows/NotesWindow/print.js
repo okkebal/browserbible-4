@@ -2,6 +2,7 @@ import { createVerseDetector } from '@verse-detection/VerseDetectionPlugin.js';
 import { BOOK_CODES } from '@verse-detection/BookCodes.js';
 
 import { getConfig } from '../../core/config.js';
+import { showNotice } from './notice.js';
 
 const CONTENT_BASE_URL = `https://inscript.bible.cloud/${getConfig().textsPath}`;
 const DEFAULT_TEXT_ID = 'ENGWEB';
@@ -57,7 +58,6 @@ async function fetchVerseText(book, reference, textId) {
 
   const tid = textId || DEFAULT_TEXT_ID;
   const url = `${CONTENT_BASE_URL}/${tid}/${parsed.sectionId}.html`;
-  console.log('[print] Fetching verse:', url, 'verses:', parsed.startVerse, '-', parsed.endVerse);
 
   try {
     const response = await fetch(url);
@@ -67,10 +67,7 @@ async function fetchVerseText(book, reference, textId) {
     }
 
     const html = await response.text();
-    console.log('[print] Fetched HTML length:', html.length);
-    const result = extractVersesFromHtml(html, parsed);
-    console.log('[print] Extracted text:', result ? result.substring(0, 80) + '...' : '(empty)');
-    return result;
+    return extractVersesFromHtml(html, parsed);
   } catch (err) {
     console.error('[print] Fetch error:', err);
     return '';
@@ -127,13 +124,9 @@ function extractVersesFromHtml(html, parsed) {
 async function processNoteContentForPrint(htmlContent, includeVerseText) {
   if (!htmlContent) return '';
 
-  console.log('[print] processNoteContentForPrint called, includeVerseText:', includeVerseText);
-  console.log('[print] htmlContent:', htmlContent.substring(0, 200));
-
   let detector, plainText, verses;
   try {
     detector = createVerseDetector();
-    console.log('[print] detector created, methods:', Object.keys(detector));
   } catch (err) {
     console.error('[print] createVerseDetector() threw:', err);
     return htmlContent;
@@ -141,7 +134,6 @@ async function processNoteContentForPrint(htmlContent, includeVerseText) {
 
   try {
     plainText = stripHtml(htmlContent);
-    console.log('[print] plainText:', JSON.stringify(plainText.substring(0, 200)));
   } catch (err) {
     console.error('[print] stripHtml threw:', err);
     return htmlContent;
@@ -149,14 +141,12 @@ async function processNoteContentForPrint(htmlContent, includeVerseText) {
 
   try {
     verses = detector.detectVerses(plainText);
-    console.log('[print] detected verses:', verses.length, JSON.stringify(verses));
   } catch (err) {
     console.error('[print] detectVerses threw:', err);
     return htmlContent;
   }
 
   if (!includeVerseText || verses.length === 0) {
-    console.log('[print] skipping verse fetch: includeVerseText=', includeVerseText, 'verses.length=', verses.length);
     return htmlContent;
   }
   const verseTexts = await Promise.all(
@@ -179,7 +169,6 @@ async function processNoteContentForPrint(htmlContent, includeVerseText) {
     })
     .join('\n');
 
-  console.log('[print] blockquotes built:', blockquotes.length > 0 ? blockquotes.substring(0, 200) : '(none)');
   return htmlContent + (blockquotes ? '\n' + blockquotes : '');
 }
 
@@ -269,15 +258,12 @@ function buildPrintHtml(title, notesHtml) {
  * @param {{ includeVerseText?: boolean, title?: string }} options
  */
 export async function printNotes(notes, options = {}) {
-  console.log('[print] printNotes called, options:', JSON.stringify(options), 'notes:', notes.length);
-
   if (!notes || notes.length === 0) {
-    alert('No notes to print');
+    showNotice('No notes to print');
     return;
   }
 
   const includeVerseText = options.includeVerseText || false;
-  console.log('[print] includeVerseText resolved to:', includeVerseText);
   const title = options.title || (notes.length === 1 ? (notes[0].title || 'Note') : 'Notes');
 
   // Process all notes

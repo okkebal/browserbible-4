@@ -204,7 +204,7 @@ export class ParallelsWindowComponent extends BaseWindow {
         if (gospelOption) gospelOption.selected = true;
       }
     } catch (err) {
-      console.log('Error loading parallels data', err);
+      console.error('Error loading parallels data', err);
     }
   }
 
@@ -217,7 +217,7 @@ export class ParallelsWindowComponent extends BaseWindow {
       this.textChooser.setTextInfo(this.state.currentTextInfo);
       this.refs.textlistui.innerHTML = this.state.currentTextInfo.abbr;
     } catch (err) {
-      console.log('ERROR loading text', textid);
+      console.error('Error loading text', textid, err);
 
       try {
         const textInfoData = await loadTextsAsync();
@@ -268,7 +268,7 @@ export class ParallelsWindowComponent extends BaseWindow {
       this.state.currentParallelData = data;
       this.createParallel();
     } catch (err) {
-      console.log('error loading parallel data', err);
+      console.error('Error loading parallel data', err);
     }
   }
 

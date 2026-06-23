@@ -1,3 +1,5 @@
+import { showNotice } from './notice.js';
+
 function stripHtml(html) {
   const tmp = document.createElement('div');
   tmp.innerHTML = html;
@@ -138,7 +140,7 @@ export function notesToRtf(notes) {
  */
 export function downloadNotes(notes, format) {
   if (!notes || notes.length === 0) {
-    alert('No notes to download');
+    showNotice('No notes to download');
     return;
   }
 

@@ -430,7 +430,7 @@ export class TextSearch {
         this.isSearching = false;
       })
       .catch(error => {
-        console.log('error:serverSearch', error);
+        console.error('error:serverSearch', error);
         this.isSearching = false;
       });
   }
