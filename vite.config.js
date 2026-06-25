@@ -136,7 +136,8 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '4.0.0'),
     __DISABLED_WINDOW_TYPES__: JSON.stringify(siteConfig.disabledWindowTypes),
-    __DISABLED_FEATURES__: JSON.stringify(siteConfig.disabledFeatures)
+    __DISABLED_FEATURES__: JSON.stringify(siteConfig.disabledFeatures),
+    __API_BIBLE_PROXY_BASE__: JSON.stringify(siteConfig.apiBibleProxyBase || 'http://localhost:8787/v1')
   },
 
   // Plugins

@@ -22,6 +22,25 @@ const defaultConfig = {
   serverSearchPath: 'https://arc.dbs.org/api/bible-search/',
   topTexts: [],
 
+  // API.Bible provider. The frontend never holds the api-key; it only talks to
+  // the proxy worker, which adds it. apiBibleProxyBase points at that proxy
+  // (no trailing slash), e.g. http://localhost:8787/v1 for local wrangler dev.
+  apiBibleEnabled: true,
+  // Baked per build profile (sites/{profile}.json -> vite define): localhost for
+  // dev, https://api.inscript.org/abs/v1 for the inscript build.
+  apiBibleProxyBase: (typeof __API_BIBLE_PROXY_BASE__ !== 'undefined')
+    ? __API_BIBLE_PROXY_BASE__
+    : 'http://localhost:8787/v1',
+  // FUMS fair-use reporting is all done server-side by the proxy, so there's no
+  // frontend FUMS config here.
+  // Which API.Bible Bible IDs to show (NIV, CSB, NLT). The proxy enforces the
+  // same list server-side.
+  apiBibleIncludeIds: [
+    '78a9f6124f344018-01', // NIV
+    'a556c5305ee15c3f-01', // CSB
+    'd6e14a625393b4da-01'  // NLT
+  ],
+
   newBibleWindowVersion: 'ENGWEB',
   newWindowFragmentid: 'JN1_1',
   newCommentaryWindowTextId: 'commentary:ENGWES',

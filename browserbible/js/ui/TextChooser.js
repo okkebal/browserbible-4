@@ -12,6 +12,7 @@ import { t as i18nT } from '../lib/i18n.js';
 import { getConfig } from '../core/config.js';
 import audioEarSvg from '../../css/images/audio-ear.svg?raw';
 import morphSvg from '../../css/images/morphology-gray-dark.svg?raw';
+import bibleApiLogoSvg from '../../public/img/bible-api_logo.svg?raw';
 
 const hasTouch = 'ontouchend' in document;
 const ROW_HEIGHT = 32; // Fixed row height for virtual scrolling
@@ -28,6 +29,14 @@ const audioTemplate = (() => {
   const span = document.createElement('span');
   span.className = 'text-chooser-audio';
   span.innerHTML = audioEarSvg;
+  return span;
+})();
+// API.Bible attribution badge, shown at the right of each API.Bible row.
+const apiBibleTemplate = (() => {
+  const span = document.createElement('span');
+  span.className = 'text-chooser-provider-apibible';
+  span.title = 'Powered by API.Bible';
+  span.innerHTML = bibleApiLogoSvg;
   return span;
 })();
 
@@ -67,6 +76,10 @@ export function TextChooser() {
   filter.addEventListener('input', handleFilterInput);
   filter.addEventListener('keydown', handleFilterKeydown);
   main.addEventListener('scroll', handleScroll, { passive: true });
+
+  // When a provider is disabled at runtime (e.g. API.Bible hits its monthly
+  // limit) it removes its texts and fires this event so an open chooser drops them.
+  document.addEventListener('texts:provider-disabled', () => refresh());
 
   function handleFilterKeydown(e) {
     if (e.key === 'Enter' || e.keyCode === 13) {
@@ -211,6 +224,9 @@ export function TextChooser() {
       }
       if (text.hasAudio || text.audioDirectory || text.fcbh_audio_ot || text.fcbh_audio_nt) {
         row.appendChild(audioTemplate.cloneNode(true));
+      }
+      if (text.providerName === 'apibible') {
+        row.appendChild(apiBibleTemplate.cloneNode(true));
       }
     }
 
@@ -403,6 +419,24 @@ export function TextChooser() {
     scheduleRender();
   }
 
+  // Rebuild from the current manifest (e.g. after a provider is disabled),
+  // clearing caches so removed texts don't linger.
+  function refresh() {
+    listData = null;
+    groupedCache = null;
+    groupedCacheKey = null;
+    processedData = [];
+    processedDataKey = null;
+
+    if (textChooser.matches(':popover-open')) {
+      loadTexts((data) => {
+        listData = data;
+        processTexts(listData);
+        renderNow();
+      });
+    }
+  }
+
   // Cached so we can position the popover *before* showPopover() runs;
   // offsetWidth is 0 while the popover is closed (display: none).
   // Default matches the width set in textchooser.css.
@@ -494,6 +528,7 @@ export function TextChooser() {
     },
     isVisible: () => textChooser.matches(':popover-open'),
     node: () => textChooser,
+    refresh,
     size: () => {} // No-op, CSS handles sizing
   };
 

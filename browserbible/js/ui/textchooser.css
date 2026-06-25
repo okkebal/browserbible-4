@@ -211,20 +211,26 @@
 .text-chooser-row .text-chooser-audio,
 .text-chooser-row .text-chooser-lemma,
 .text-chooser-row .text-chooser-abs,
-.text-chooser-row .text-chooser-fcbh {
+.text-chooser-row .text-chooser-fcbh,
+.text-chooser-row .text-chooser-provider-apibible {
 	width: 20px;
 	height: 20px;
 	flex-shrink: 0;
 	margin-left: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .text-chooser-row .text-chooser-audio,
 .text-chooser-row .text-chooser-lemma,
-.text-chooser-row .text-chooser-provider-fcbh {
+.text-chooser-row .text-chooser-provider-fcbh,
+.text-chooser-row .text-chooser-provider-apibible {
 	color: var(--color-text-muted);
 }
 .text-chooser-row .text-chooser-audio svg,
 .text-chooser-row .text-chooser-lemma svg,
-.text-chooser-row .text-chooser-provider-fcbh svg {
+.text-chooser-row .text-chooser-provider-fcbh svg,
+.text-chooser-row .text-chooser-provider-apibible svg {
 	width: 16px;
 	height: 16px;
 }

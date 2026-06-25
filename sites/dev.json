@@ -1,4 +1,5 @@
 {
   "disabledWindowTypes": [],
-  "disabledFeatures": []
+  "disabledFeatures": [],
+  "apiBibleProxyBase": "http://localhost:8787/v1"
 }

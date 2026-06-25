@@ -267,3 +267,13 @@ export function getTextInfoData() {
   return textInfoData;
 }
 
+/**
+ * Drop all of a provider's texts from the loaded manifest, so it can be disabled
+ * at runtime (e.g. API.Bible once its monthly limit is hit). Refresh the text
+ * chooser afterwards to reflect it.
+ * @param {string} providerName
+ */
+export function removeProviderTexts(providerName) {
+  textInfoData = textInfoData.filter((info) => info.providerName !== providerName);
+}
+

@@ -13,7 +13,8 @@ export default [
         // Build-time constants injected by Vite (see vite.config.js `define`)
         __APP_VERSION__: 'readonly',
         __DISABLED_WINDOW_TYPES__: 'readonly',
-        __DISABLED_FEATURES__: 'readonly'
+        __DISABLED_FEATURES__: 'readonly',
+        __API_BIBLE_PROXY_BASE__: 'readonly'
       }
     },
     rules: {
