@@ -47,16 +47,16 @@ let textDataIsLoaded = false;
 // manifest stops offering them.
 let quotaExceeded = false;
 
+const QUOTA_MESSAGE = 'The API.Bible limit has been reached. NIV, CSB, and NLT are unavailable until next month.';
+const LOADING_MESSAGE = 'Loading from API.Bible…';
+
 const showQuotaNotice = () => {
   if (typeof window === 'undefined' || !window.MovableWindow) return;
 
   const modal = new window.MovableWindow(420, 190, 'API.Bible');
   const body = modal.body?.nodeType ? modal.body : modal.body?.[0];
   if (body) {
-    body.innerHTML = '<div style="padding:16px;line-height:1.5">' +
-      'The monthly <strong>API.Bible</strong> call limit has been reached. ' +
-      'NIV, CSB, and NLT are temporarily unavailable and will return next month.' +
-      '</div>';
+    body.innerHTML = `<div style="padding:16px;line-height:1.5">${QUOTA_MESSAGE}</div>`;
   }
   modal.show();
 };
@@ -89,6 +89,10 @@ const isQuotaResponse = (response) => {
     return true;
   }
   return false;
+};
+
+const failSection = (errorCallback, textid, sectionid) => {
+  errorCallback?.(textid, sectionid, quotaExceeded ? { message: QUOTA_MESSAGE } : undefined);
 };
 
 const getProviderid = (textid) => {
@@ -241,7 +245,8 @@ function buildManifest() {
       lang: 'eng',
       langName: 'English',
       langNameEnglish: 'English',
-      dir: 'ltr'
+      dir: 'ltr',
+      loadingMessage: LOADING_MESSAGE
     }));
 }
 
@@ -337,7 +342,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
 
   getTextInfo(textid, (textinfo) => {
     if (!textinfo) {
-      errorCallback?.(textid, sectionid);
+      failSection(errorCallback, textid, sectionid);
       return;
     }
 
@@ -346,7 +351,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
     const bookData = BOOK_DATA[bookid];
 
     if (!bookData) {
-      errorCallback?.(textid, sectionid);
+      failSection(errorCallback, textid, sectionid);
       return;
     }
 
@@ -372,7 +377,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
       .then(json => {
         const content = json?.data?.content;
         if (!Array.isArray(content)) {
-          errorCallback?.(textid, sectionid);
+          failSection(errorCallback, textid, sectionid);
           return;
         }
 
@@ -401,7 +406,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
         callback(html.join(''));
       })
       .catch(() => {
-        errorCallback?.(textid, sectionid);
+        failSection(errorCallback, textid, sectionid);
       });
   });
 }

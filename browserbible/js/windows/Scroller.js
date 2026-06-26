@@ -420,6 +420,20 @@ export function Scroller(node) {
     wrapper.appendChild(container);
   };
 
+  const showLoadError = (message) => {
+    if (!wrapper) return;
+
+    wrapper.innerHTML = '';
+    nodeEl.scrollTop = 0;
+
+    const container = elem('div', { className: 'chapter-unavailable' });
+    const messageEl = elem('p', { className: 'chapter-unavailable-message' });
+    messageEl.textContent = message;
+    container.appendChild(messageEl);
+
+    wrapper.appendChild(container);
+  };
+
   const load = (loadType, sectionid, fragmentid) => {
     if (sectionid === 'null' || sectionid === null || sectionid === '') return;
     if (!wrapper) return;
@@ -427,16 +441,23 @@ export function Scroller(node) {
     if (isAlreadyLoaded(loadType, sectionid, fragmentid)) return;
 
     if (loadType === 'text') {
-      wrapper.innerHTML = `<div class="loading-indicator" style="height:${nodeEl.offsetHeight}px;"></div>`;
+      const message = currentTextInfo?.loadingMessage
+        ? `<div class="loading-message">${currentTextInfo.loadingMessage}</div>`
+        : '';
+      wrapper.innerHTML = `<div class="loading-indicator" style="height:${nodeEl.offsetHeight}px;">${message}</div>`;
       nodeEl.scrollTop = 0;
     }
 
     const nodeScrolltopBefore = nodeEl.scrollTop;
     const wrapperHeightBefore = wrapper.offsetHeight;
 
-    const handleLoadError = () => {
+    const handleLoadError = (_errTextid, _errSectionid, detail) => {
       if (!wrapper) return;
-      if (loadType === 'text') {
+      if (loadType !== 'text') return;
+
+      if (detail?.message) {
+        showLoadError(detail.message);
+      } else {
         showChapterUnavailable(sectionid);
       }
     };
