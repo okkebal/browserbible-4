@@ -13,7 +13,7 @@ function getTextManifest(callback) {
 	const config = getConfig();
 	const url = `${config.baseContentUrl}content/commentaries/commentaries.json`;
 
-	fetch(url)
+	fetch(url, { cache: 'no-cache' })
 		.then(response => {
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			return response.json();

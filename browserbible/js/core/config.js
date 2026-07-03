@@ -6,14 +6,14 @@
 const defaultConfig = {
   settingsPrefix: '20260501',
 
-  enableOnlineSources: true,
+  enableOnlineSources: false,
 
   windows: [
     { type: 'bible', data: { textid: 'ENGWEB', fragmentid: 'JN1_1' } },
     { type: 'bible', data: { textid: 'ENGASV', fragmentid: 'JN1_1' } }
   ],
 
-  baseContentUrl: 'https://inscript.bible.cloud/',
+  baseContentUrl: '',
   textsPath: 'content/texts',
   baseContentApiPath: '',
   baseContentApiKey: '',
@@ -25,7 +25,7 @@ const defaultConfig = {
   // API.Bible provider. The frontend never holds the api-key; it only talks to
   // the proxy worker, which adds it. apiBibleProxyBase points at that proxy
   // (no trailing slash), e.g. http://localhost:8787/v1 for local wrangler dev.
-  apiBibleEnabled: true,
+  apiBibleEnabled: false,
   // Baked per build profile (sites/{profile}.json -> vite define): localhost for
   // dev, https://api.inscript.org/abs/v1 for the inscript build.
   apiBibleProxyBase: (typeof __API_BIBLE_PROXY_BASE__ !== 'undefined')

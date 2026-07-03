@@ -417,7 +417,13 @@ export class TextWindowComponent extends BaseWindow {
     if (data.messagetype === 'nav' &&
         (data.type === 'bible' || data.type === 'commentary' || data.type === 'videobible' || data.type === 'deafbible') &&
         data.locationInfo != null) {
-      this.scroller.scrollTo(data.locationInfo.fragmentid, data.locationInfo.offset);
+      if (this.state.textType === 'commentary') {
+        const sectionid = data.locationInfo.sectionid ||
+          data.locationInfo.fragmentid?.split('_')[0];
+        if (sectionid) this.scroller.load('text', sectionid);
+      } else {
+        this.scroller.scrollTo(data.locationInfo.fragmentid, data.locationInfo.offset);
+      }
     } else if (data.messagetype === 'maprequest' && data.requesttype === 'currentcontent') {
       // MapWindow is requesting current content (happens when MapWindow is created after BibleWindow)
       this.scroller.broadcastCurrentContent();

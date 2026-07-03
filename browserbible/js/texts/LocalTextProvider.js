@@ -51,7 +51,7 @@ function getTextManifest(callback) {
   const config = getConfig();
   const textsUrl = `${config.baseContentUrl}${config.textsPath}/${config.textsIndexPath}`;
 
-  fetch(textsUrl)
+  fetch(textsUrl, { cache: 'no-cache' })
     .then(response => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();

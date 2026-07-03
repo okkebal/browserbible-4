@@ -52,7 +52,7 @@ export default defineConfig(({ command }) => {
     outDir: 'dist',
 
     // Empty the output directory before building
-    emptyOutDir: true,
+    emptyOutDir: false,
 
     // Sourcemaps only in dev-profile builds — production builds (SITE=inscript)
     // must not ship .map files exposing the source
@@ -151,7 +151,7 @@ export default defineConfig(({ command }) => {
   // Plugins
   plugins: [
     siteProfile !== 'dev' && copyPublicExcludingTexts(),
-    compression({ algorithms: ['gzip', 'brotliCompress'] })
+    // compression({ algorithms: ['gzip', 'brotliCompress'] })
   ].filter(Boolean)
   };
 });

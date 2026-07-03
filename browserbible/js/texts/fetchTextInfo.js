@@ -17,7 +17,7 @@ export function fetchTextInfo(cache, contentPath, textid, callback, errorCallbac
   const config = getConfig();
   const infoUrl = `${config.baseContentUrl}${contentPath}/${textid}/info.json`;
 
-  fetch(infoUrl)
+  fetch(infoUrl, { cache: 'no-cache' })
     .then(response => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();

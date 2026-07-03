@@ -83,7 +83,7 @@ const createLocationInfo = (fragment, currentTextInfo, topOfContentArea) => {
     fragmentid,
     sectionid: fragment.classList.contains('section')
       ? fragmentid
-      : (closestSection?.getAttribute('data-id') ?? ''),
+      : (closestSection?.getAttribute('data-id') || fragmentid?.split('_')[0] || ''),
     offset: topOfContentArea - offset(fragment).top,
     textid: currentTextInfo?.id ?? '',
     _textInfo: currentTextInfo // Store for lazy label generation
@@ -237,7 +237,7 @@ export function Scroller(node) {
       getFragmentSelector(currentTextInfo?.type?.toLowerCase());
 
     let fragments = nodeEl.querySelectorAll(fragmentSelector);
-    if (fragments.length === 1) {
+    if (fragments.length <= 1) {
       fragments = nodeEl.querySelectorAll('.section');
     }
 
@@ -468,8 +468,8 @@ export function Scroller(node) {
       ignoreScrollEvent = true;
       insertContent(loadType, content, nodeScrolltopBefore, wrapperHeightBefore);
 
-      if (loadType === 'text' && fragmentid) {
-        scrollTo(fragmentid);
+      if (loadType === 'text') {
+        if (fragmentid) scrollTo(fragmentid);
         locationInfo = null;
         updateLocationInfo();
       }
