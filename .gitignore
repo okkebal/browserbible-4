@@ -13,3 +13,6 @@ coverage/
 
 # Repaired starter-pack zip — output of repair-starter-pack.mjs, uploaded to CDN.
 /starter-pack.zip
+
+# SWORD source modules (binary data, 400 MB+)
+/starter-pack/

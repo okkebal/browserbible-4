@@ -1,0 +1,101 @@
+{
+  "textIds": ["NLDKANT","NLDKINGCOMMENTS","ENGSCO","ENGMHCC","ENGCLA","ENGWES","ENGTSK","ENGBAR"],
+  "textInfoData": [
+    {
+      "id": "NLDKANT",
+      "type": "commentary",
+      "name": "Kanttekeningen Statenvertaling",
+      "nameEnglish": "Dutch Staten Bible Annotations",
+      "abbr": "KANT",
+      "lang": "nld",
+      "langName": "Nederlands",
+      "langNameEnglish": "Dutch",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "NLDKINGCOMMENTS",
+      "type": "commentary",
+      "name": "Kingcomments NL",
+      "nameEnglish": "King Comments (Dutch)",
+      "abbr": "KING",
+      "lang": "nld",
+      "langName": "Nederlands",
+      "langNameEnglish": "Dutch",
+      "dir": "ltr",
+      "redistributable": false
+    },
+    {
+      "id": "ENGSCO",
+      "type": "commentary",
+      "name": "Scofield Reference Notes (1917)",
+      "nameEnglish": "Scofield Reference Notes (1917)",
+      "abbr": "SCO",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGMHCC",
+      "type": "commentary",
+      "name": "Matthew Henry Concise Commentary",
+      "nameEnglish": "Matthew Henry Concise Commentary",
+      "abbr": "MHC",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGCLA",
+      "type": "commentary",
+      "name": "Adam Clarke's Commentary",
+      "nameEnglish": "Adam Clarke's Commentary",
+      "abbr": "CLA",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGWES",
+      "type": "commentary",
+      "name": "John Wesley's Notes",
+      "nameEnglish": "John Wesley's Notes on the Bible",
+      "abbr": "WES",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGTSK",
+      "type": "commentary",
+      "name": "Treasury of Scripture Knowledge",
+      "nameEnglish": "Treasury of Scripture Knowledge",
+      "abbr": "TSK",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGBAR",
+      "type": "commentary",
+      "name": "Barnes' New Testament Notes",
+      "nameEnglish": "Barnes' New Testament Notes",
+      "abbr": "BAR",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    }
+  ]
+}
