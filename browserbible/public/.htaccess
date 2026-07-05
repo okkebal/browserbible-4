@@ -1,0 +1,21 @@
+# Force browsers to always revalidate the app shell and script bundle so a
+# rebuild is picked up immediately instead of being served from stale disk
+# cache (Apache sends no Cache-Control by default, so Chrome falls back to a
+# heuristic freshness window and can skip revalidation entirely).
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  <FilesMatch "\.js$">
+    ExpiresActive On
+    ExpiresDefault "access plus 0 seconds"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.js$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>

@@ -1,7 +1,6 @@
 import { BaseWindow, registerWindowComponent } from './BaseWindow.js';
 import { Reference } from '../bible/BibleReference.js';
 import { i18n } from '../lib/i18n.js';
-import { JesusFilmMediaApi } from '../media/ArclightApi.js';
 
 const DEFAULT_LANGUAGE = 'eng';
 const RESIZE_DEBOUNCE_MS = 100;
@@ -261,21 +260,7 @@ class MediaWindowComponent extends BaseWindow {
   }
 
   async createJfmVideoElement(item) {
-    // Show loading indicator
-    this.refs.galleryContent.innerHTML = '<div class="media-gallery-loading">Loading video...</div>';
-
-    let videoData = null;
-    try {
-      videoData = await JesusFilmMediaApi.getVideoData(this.state.currentLanguage, item.chapterNumber);
-    } catch { /* empty */ }
-
-    if (videoData) {
-      if (videoData.title) item.title = videoData.title;
-      return this.createVideoElement(videoData.url, {
-        poster: videoData.poster || videoData.thumbnail || ''
-      });
-    }
-
+    // Locally-served video only; no remote Arclight lookup (offline-only build).
     return this.createVideoElement(item.url);
   }
 
@@ -494,9 +479,12 @@ class MediaWindowComponent extends BaseWindow {
 
     const baseUrl = `${this.config.baseContentUrl}content/media/${mediaLibrary.folder}/`;
     const ext = Array.isArray(mediaInfo.exts) ? mediaInfo.exts[0] : mediaInfo.exts;
+    const largeSuffix = mediaLibrary.largeSuffix || `.${ext}`;
+    const thumbSuffix = mediaLibrary.thumbSuffix || '-thumb.jpg';
+
     return {
-      fullUrl: `${baseUrl}${mediaInfo.filename}.${ext}`,
-      thumbUrl: `${baseUrl}${mediaInfo.filename}-thumb.jpg`
+      fullUrl: `${baseUrl}${mediaInfo.filename}${largeSuffix}`,
+      thumbUrl: `${baseUrl}${mediaInfo.filename}${thumbSuffix}`
     };
   }
 

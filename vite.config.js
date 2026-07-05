@@ -152,6 +152,25 @@ export default defineConfig(({ command }) => {
   plugins: [
     siteProfile !== 'dev' && copyPublicExcludingTexts(),
     // compression({ algorithms: ['gzip', 'brotliCompress'] })
+    cacheBustEntryScript()
   ].filter(Boolean)
   };
 });
+
+// entryFileNames is a fixed 'js/bundle.js' (no content hash) so Apache can serve
+// it at a stable path, but that means browsers can keep serving a stale cached
+// copy across rebuilds since the URL never changes. Append a build-time query
+// string to the entry <script> tag so each build forces a fresh fetch.
+function cacheBustEntryScript() {
+  return {
+    name: 'cache-bust-entry-script',
+    apply: 'build',
+    transformIndexHtml(html) {
+      const buildId = Date.now();
+      return html.replace(
+        /(src=["']\.?\/?js\/bundle\.js)(["'])/,
+        `$1?v=${buildId}$2`
+      );
+    }
+  };
+}

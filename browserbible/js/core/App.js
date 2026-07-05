@@ -50,7 +50,26 @@ export class App {
 
     window.addEventListener('resize', this.resize.bind(this));
     window.addEventListener('orientationchange', this.resize.bind(this));
+    window.visualViewport?.addEventListener('resize', this.resize.bind(this));
+
+    // window 'resize' doesn't reliably fire for every layout change that
+    // affects our available width/height (e.g. Chrome DevTools' device-mode
+    // toggle on an already-loaded page, browser chrome show/hide on mobile,
+    // or the container changing size without the outer window changing).
+    // ResizeObserver reacts to the container's actual box size regardless of
+    // what caused it to change.
+    if (typeof ResizeObserver !== 'undefined') {
+      this._resizeObserver = new ResizeObserver(() => this.resize());
+      this._resizeObserver.observe(this.container);
+    }
+
+    // The very first resize() can run before the browser has committed layout
+    // for the real/emulated viewport (e.g. a page loaded directly into a
+    // mobile device-emulation mode), reading a stale desktop-sized
+    // window.innerWidth that never gets corrected if nothing changes again
+    // afterward. Re-run once after paint has settled to catch that case.
     this.resize();
+    requestAnimationFrame(() => requestAnimationFrame(() => this.resize()));
 
     try {
       window.top.scrollTo(0, 1);
@@ -136,8 +155,13 @@ export class App {
         document.body.classList.remove('one-window');
       }
 
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      // window.innerWidth is the *layout* viewport, which can diverge from
+      // what's actually visible on screen (the *visual* viewport) -- e.g.
+      // under mobile OS display-scaling settings or nested devtools device
+      // emulation. visualViewport reports what's really rendered, which is
+      // what our pixel-width layout needs to fit inside.
+      const width = window.visualViewport?.width ?? window.innerWidth;
+      const height = window.visualViewport?.height ?? window.innerHeight;
 
       const mainStyle = window.getComputedStyle(this.main);
       const areaHeight = height - this.header.offsetHeight + this.footer.offsetHeight;

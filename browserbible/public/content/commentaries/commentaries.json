@@ -1,5 +1,5 @@
 {
-  "textIds": ["NLDKANT","NLDKINGCOMMENTS","ENGSCO","ENGMHCC","ENGCLA","ENGWES","ENGTSK","ENGBAR"],
+  "textIds": ["NLDKANT","NLDKINGCOMMENTS","ENGSCO","ENGMHCC","ENGCLA","ENGWES","ENGTSK","ENGBAR","ENGJFB","ENGABBOTT","ENGFAMILY","ENGGENEVA"],
   "textInfoData": [
     {
       "id": "NLDKANT",
@@ -91,6 +91,54 @@
       "name": "Barnes' New Testament Notes",
       "nameEnglish": "Barnes' New Testament Notes",
       "abbr": "BAR",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGJFB",
+      "type": "commentary",
+      "name": "Jamieson-Fausset-Brown Commentary",
+      "nameEnglish": "Jamieson-Fausset-Brown Commentary",
+      "abbr": "JFB",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGABBOTT",
+      "type": "commentary",
+      "name": "Abbott's Illustrated New Testament",
+      "nameEnglish": "Abbott's Illustrated New Testament",
+      "abbr": "ABBOTT",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGFAMILY",
+      "type": "commentary",
+      "name": "Family Bible Notes",
+      "nameEnglish": "Family Bible Notes",
+      "abbr": "FAMILY",
+      "lang": "eng",
+      "langName": "English",
+      "langNameEnglish": "English",
+      "dir": "ltr",
+      "redistributable": true
+    },
+    {
+      "id": "ENGGENEVA",
+      "type": "commentary",
+      "name": "Geneva Bible Translation Notes",
+      "nameEnglish": "Geneva Bible Translation Notes",
+      "abbr": "GENEVA",
       "lang": "eng",
       "langName": "English",
       "langNameEnglish": "English",

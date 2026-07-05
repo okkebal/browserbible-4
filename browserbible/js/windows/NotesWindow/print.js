@@ -4,7 +4,6 @@ import { BOOK_CODES } from '@verse-detection/BookCodes.js';
 import { getConfig } from '../../core/config.js';
 import { showNotice } from './notice.js';
 
-const CONTENT_BASE_URL = `https://inscript.bible.cloud/${getConfig().textsPath}`;
 const DEFAULT_TEXT_ID = 'ENGWEB';
 
 
@@ -57,7 +56,8 @@ async function fetchVerseText(book, reference, textId) {
   }
 
   const tid = textId || DEFAULT_TEXT_ID;
-  const url = `${CONTENT_BASE_URL}/${tid}/${parsed.sectionId}.html`;
+  const config = getConfig();
+  const url = `${config.baseContentUrl}${config.textsPath}/${tid}/${parsed.sectionId}.html`;
 
   try {
     const response = await fetch(url);

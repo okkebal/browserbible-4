@@ -188,6 +188,7 @@ div.c + div.q .v-1 {
 }
 
 .v {
+	display: block;
 	padding: .3em 0;
 }
 

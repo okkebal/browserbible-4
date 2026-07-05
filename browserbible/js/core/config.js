@@ -19,7 +19,7 @@ const defaultConfig = {
   baseContentApiKey: '',
   textsIndexPath: 'texts.json',
   aboutPagePath: 'about.html',
-  serverSearchPath: 'https://arc.dbs.org/api/bible-search/',
+  serverSearchPath: '',
   topTexts: [],
 
   // API.Bible provider. The frontend never holds the api-key; it only talks to
@@ -52,8 +52,8 @@ const defaultConfig = {
   defaultLanguage: '',
 
   customCssUrl: '',
-  dbsAudioEnabled: true,
-  dbsAudioUrl: 'https://audio.dbs.org',
+  dbsAudioEnabled: false,
+  dbsAudioUrl: '',
   // Local per-text audio manifests (content/audio/{id}/info.json) only exist for
   // locally-served content; probing them against the remote CDN just 404s, so
   // this stays off by default and is enabled in the 'local' preset below.

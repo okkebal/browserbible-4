@@ -88,7 +88,7 @@ function loadSection(textid, sectionid, callback, errorCallback) {
     const config = getConfig();
     const url = `${config.baseContentUrl}${config.textsPath}/${textid}/${sectionid}.html`;
 
-    fetch(url)
+    fetch(url, { cache: 'no-cache' })
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.text();
